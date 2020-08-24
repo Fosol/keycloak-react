@@ -1,4 +1,0 @@
-D:\SourceCode\Fosol\keycloak-react\api\libs\Data\bin\Debug\netcoreapp3.1\Data.Entities.dll
-D:\SourceCode\Fosol\keycloak-react\api\libs\Data\obj\Debug\netcoreapp3.1\Data.csprojAssemblyReference.cache
-D:\SourceCode\Fosol\keycloak-react\api\libs\Data\obj\Debug\netcoreapp3.1\Data.AssemblyInfoInputs.cache
-D:\SourceCode\Fosol\keycloak-react\api\libs\Data\obj\Debug\netcoreapp3.1\Data.AssemblyInfo.cs
