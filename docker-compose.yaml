@@ -1,0 +1,81 @@
+version: "3.5"
+
+services:
+  ####################### Keycloak #######################
+  keycloak:
+    restart: on-failure
+    container_name: keycloak
+    build:
+      context: ./auth/keycloak
+    env_file:
+      - auth/keycloak/.env
+    volumes:
+      - ./auth/keycloak/config/realm-export.json:/tmp/realm-export.json
+    ports:
+      - 8080:8080
+    networks:
+      - app
+
+  ####################### Database #######################
+  database:
+    restart: on-failure
+    container_name: api-db
+    build:
+      context: db/mssql
+    env_file:
+      - db/mssql/.env
+    ports:
+      - "5433:1433"
+    volumes:
+      - api-db:/var/opt/mssql
+    networks:
+      - app
+
+  ####################### Backend #######################
+  api:
+    restart: on-failure
+    container_name: api
+    build:
+      context: api
+      args:
+        BUILD_CONFIGURATION: Debug
+    env_file: api/src/.env
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      - database
+      - keycloak
+    networks:
+      - app
+
+  ####################### Frontend #######################
+  app:
+    stdin_open: true
+    tty: true
+    restart: on-failure
+    container_name: app
+    build:
+      context: app
+    volumes:
+      - ./app/src:/usr/app/src
+      - ./app/public:/usr/app/public
+      - app-node-cache:/usr/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    env_file: ./app/.env
+    networks:
+      - app
+
+####################### Networks Definition #######################
+networks:
+  app:
+    name: app-net
+    driver: bridge
+
+####################### Volumes Definition #######################
+volumes:
+  api-db:
+  app-node-cache:
